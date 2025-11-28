@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>SOLAR CORONA | HUD FIX</title>
+    <title>SOLAR CORONA | SIGNATURE RESTORED</title>
     <style>
         /* 1. 基础环境 */
         body { 
@@ -15,86 +15,92 @@
 
         /* 通用玻璃态 */
         .glass-panel {
-            background: rgba(15, 15, 20, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.95);
+            border-radius: 12px;
         }
 
         /* 2. 入口层 */
         #entry-layer {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 2000; 
+            background: #000; z-index: 9999; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 1.5s cubic-bezier(0.6, 0, 0.2, 1);
         }
 
-        .title-group { text-align: center; margin-bottom: 100px; position: relative; z-index: 2; }
+        .title-group { text-align: center; margin-bottom: 90px; position: relative; z-index: 2; }
         .main-title {
             color: #fff; font-size: 36px; letter-spacing: 18px; font-weight: 200;
             text-shadow: 0 0 40px rgba(255,255,255,0.3); margin-bottom: 20px;
             text-transform: uppercase; position: relative; display: inline-block;
         }
-        .main-title::after {
-            content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
-            width: 40px; height: 1px; background: rgba(255,255,255,0.3);
-        }
         .sub-title {
-            color: rgba(255,255,255,0.35); font-size: 10px; letter-spacing: 8px; 
+            color: rgba(255,255,255,0.4); font-size: 10px; letter-spacing: 8px; 
             font-family: 'Times New Roman', serif; text-transform: uppercase;
+            border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;
+        }
+        .hint-text {
+            margin-top: 30px; color: #666; font-size: 9px; letter-spacing: 2px;
+            opacity: 0; transition: opacity 1s; font-weight: 400;
         }
 
-        /* 3. 核心按钮 */
-        .halo-container {
-            position: relative; width: 160px; height: 160px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        /* 3. 双启动按钮组 */
+        .btn-group { display: flex; gap: 80px; z-index: 10; margin-top: 20px; }
+        
+        .halo-btn {
+            width: 120px; height: 120px; position: relative;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-        .halo-container:hover { transform: scale(1.05); }
+        .halo-btn:hover { transform: scale(1.1); }
+        .halo-btn:active { transform: scale(0.95); }
 
-        .ring-outer {
+        .btn-ring {
             position: absolute; width: 100%; height: 100%; border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.05);
-            border-top: 1px solid rgba(255,255,255,0.5);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            animation: spin 8s linear infinite; box-shadow: 0 0 30px rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-top: 1px solid rgba(255,255,255,0.6);
+            animation: spin 8s linear infinite;
+            transition: all 0.5s;
         }
-        .ring-mid {
-            position: absolute; width: 75%; height: 75%; border-radius: 50%;
-            border: 1px dashed rgba(255,255,255,0.2); animation: spin-rev 12s linear infinite;
+        .btn-icon { 
+            font-size: 26px; margin-bottom: 10px; color: rgba(255,255,255,0.9); 
+            text-shadow: 0 0 20px rgba(255,255,255,0.3); transition: 0.4s; 
         }
-        .ring-inner {
-            position: absolute; width: 40%; height: 40%; border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 0 20px rgba(255,255,255,0.1);
-            transition: 0.4s;
+        .btn-label { 
+            color: rgba(255,255,255,0.5); font-size: 9px; letter-spacing: 3px; 
+            transition: 0.4s; font-weight: 600; 
         }
-        .halo-text {
-            position: relative; color: rgba(255,255,255,0.5); font-size: 9px; letter-spacing: 4px;
-            z-index: 10; transition: 0.4s; font-weight: 400;
-        }
-        .halo-container:hover .ring-outer { animation-duration: 2s; border-color: rgba(255,255,255,0.8); box-shadow: 0 0 50px rgba(255,255,255,0.2); }
-        .halo-container:hover .ring-inner { width: 45%; height: 45%; background: rgba(255,255,255,0.9); box-shadow: 0 0 60px rgba(255,255,255,0.8); }
-        .halo-container:hover .halo-text { color: #000; font-weight: 700; letter-spacing: 2px; }
+        
+        .halo-btn:hover .btn-ring { border-color: rgba(255,255,255,0.9); border-top-color: #fff; animation-duration: 1.5s; box-shadow: 0 0 40px rgba(255,255,255,0.2); }
+        .halo-btn:hover .btn-label { color: #fff; letter-spacing: 5px; text-shadow: 0 0 15px #fff; }
+        .halo-btn:hover .btn-icon { transform: scale(1.2); text-shadow: 0 0 40px #fff; color: #fff; }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes spin-rev { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
 
-        /* 4. 底部专属署名 */
+        /* 4. 底部专属署名 (FIXED: 高优先级，直接控制 opacity) */
         #signature {
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            color: rgba(255,255,255,0.2); font-size: 9px; letter-spacing: 6px;
-            pointer-events: none; opacity: 0; transition: opacity 2s; font-family: 'Times New Roman', serif;
-            border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px;
+            position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
+            color: rgba(255,255,255,0.25); font-size: 9px; letter-spacing: 6px;
+            pointer-events: none; opacity: 0; transition: opacity 2s; font-weight: 300;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8); z-index: 4000; /* 确保在最顶层 */
+            font-family: 'Times New Roman', serif; white-space: nowrap;
+            border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;
         }
         
         /* 5. 模式菜单 */
         #mode-selector {
-            position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
-            display: flex; gap: 10px; z-index: 20; padding: 8px 20px;
-            opacity: 0; transition: opacity 2s 1s; border-radius: 50px;
+            position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 8px; z-index: 20; padding: 10px 24px;
+            opacity: 0; transition: opacity 1s;
+            background: rgba(15, 15, 20, 0.6); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 100px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); pointer-events: none;
         }
+        #mode-selector.visible { opacity: 1; pointer-events: auto; }
+
         .mode-btn {
             background: transparent; border: none; color: rgba(255,255,255,0.4);
             font-size: 10px; letter-spacing: 2px; cursor: pointer;
@@ -102,66 +108,83 @@
             text-transform: uppercase; position: relative; border-radius: 20px;
         }
         .mode-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
-        .mode-btn.active { color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); }
+        .mode-btn.active { color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.5); background: rgba(255,255,255,0.15); }
 
         /* 6. 顶部控制区 */
         .top-controls {
-            position: absolute; top: 30px; right: 30px; z-index: 3000;
-            display: flex; gap: 15px; align-items: center; 
-            opacity: 0; transition: opacity 2s; pointer-events: none;
+            position: absolute; right: 40px; top: 40px; z-index: 3000;
+            display: flex; gap: 20px; align-items: center; 
+            opacity: 0; transition: opacity 1s; pointer-events: none;
         }
+        .top-controls.visible { opacity: 1; pointer-events: auto; }
 
         .ctrl-btn {
-            width: 40px; height: 40px; border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(0,0,0,0.2); backdrop-filter: blur(10px);
+            width: 42px; height: 42px; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(0,0,0,0.3); backdrop-filter: blur(10px);
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.3s; color: rgba(255,255,255,0.5);
+            cursor: pointer; transition: 0.4s; color: rgba(255,255,255,0.5);
             pointer-events: auto; position: relative;
         }
         .ctrl-btn:hover {
-            border-color: rgba(255,255,255,0.8); box-shadow: 0 0 20px rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.8); color: #fff; 
+            box-shadow: 0 0 25px rgba(255,255,255,0.2);
         }
-        #btn-fullscreen { font-size: 14px; }
-        #btn-fullscreen:hover { color: #fff; }
 
-        /* 颜色指示点 */
         #color-indicator {
-            width: 12px; height: 12px; border-radius: 50%;
-            background-color: #ffffff; box-shadow: 0 0 10px rgba(255,255,255,0.8);
+            width: 14px; height: 14px; border-radius: 50%;
+            background-color: #ffffff; box-shadow: 0 0 15px rgba(255,255,255,0.6);
             transition: 0.3s; pointer-events: none;
         }
 
-        /* 7. HUD 调色盘 (Fix) */
+        /* 7. HUD 调色盘 (修复定位) */
         #hud-color-picker {
-            position: absolute; top: 55px; right: 0px;
-            width: 220px; height: 0px; overflow: hidden; border-radius: 8px;
-            transition: height 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s;
-            opacity: 0; pointer-events: none;
+            position: absolute; top: 60px; right: 0px;
+            width: 240px; height: 0px; overflow: hidden; border-radius: 12px;
+            background: rgba(10, 10, 12, 0.95); backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: height 0.6s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s;
+            opacity: 0; pointer-events: none; box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            z-index: 3001; /* 确保在调色盘顶层 */
         }
-        #hud-color-picker.active { height: 270px; opacity: 1; pointer-events: auto; }
+        #hud-color-picker.active { height: 290px; opacity: 1; pointer-events: auto; }
         
         .picker-content {
-            padding: 20px; height: 100%; box-sizing: border-box;
+            padding: 25px; height: 100%; box-sizing: border-box;
             display: flex; flex-direction: column; align-items: center;
             background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
                               linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
             background-size: 20px 20px;
         }
-        
         .corner { position: absolute; width: 8px; height: 8px; border: 1px solid rgba(255,255,255,0.4); pointer-events: none; }
-        .tl { top: 6px; left: 6px; border-right: none; border-bottom: none; }
-        .tr { top: 6px; right: 6px; border-left: none; border-bottom: none; }
-        .bl { bottom: 6px; left: 6px; border-right: none; border-top: none; }
-        .br { bottom: 6px; right: 6px; border-left: none; border-top: none; }
+        .tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+        .tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
+        .bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
+        .br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
 
-        #color-wheel {
-            width: 150px; height: 150px; border-radius: 50%; cursor: crosshair;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5); margin-bottom: 15px;
-            border: 1px solid rgba(255,255,255,0.1);
+        #color-wheel-container {
+            width: 160px; height: 160px; position: relative; margin-bottom: 20px;
+            border-radius: 50%; cursor: crosshair;
+            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.08);
         }
-        .picker-label { color: #666; font-size: 8px; letter-spacing: 3px; margin-bottom: 15px; font-weight: 700; }
-        .hex-disp { color: #fff; font-family: monospace; font-size: 10px; letter-spacing: 2px; border-bottom: 1px solid #333; padding-bottom: 4px; }
+        #color-canvas { width: 100%; height: 100%; border-radius: 50%; display: block; }
+        
+        #picker-cursor {
+            position: absolute; width: 12px; height: 12px; 
+            border: 2px solid #fff; border-radius: 50%; 
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            pointer-events: none; box-shadow: 0 0 10px rgba(255,255,255,0.8);
+            transition: none;
+        }
+
+        .picker-label { color: #666; font-size: 9px; letter-spacing: 4px; margin-bottom: 15px; font-weight: 700; }
+        .hex-disp { color: #fff; font-family: monospace; font-size: 11px; letter-spacing: 2px; border-bottom: 1px solid #444; padding-bottom: 4px; }
+        
+        #color-input { display: none; }
+
+        #btn-fullscreen { font-size: 14px; }
+        #btn-fullscreen:hover { color: #fff; }
 
         .visible { opacity: 1 !important; pointer-events: auto !important; }
     </style>
@@ -174,6 +197,7 @@
         <div style="position: relative;">
             <div class="ctrl-btn" id="btn-color" onclick="togglePicker()" title="Spectral Tuner">
                 <div id="color-indicator"></div>
+                <input type="color" id="color-input" value="#ffffff">
             </div>
             
             <div id="hud-color-picker" class="glass-panel">
@@ -181,7 +205,10 @@
                 <div class="corner bl"></div><div class="corner br"></div>
                 <div class="picker-content">
                     <div class="picker-label">SPECTRUM</div>
-                    <canvas id="color-wheel" width="300" height="300"></canvas>
+                    <div id="color-wheel-container">
+                        <canvas id="color-canvas" width="300" height="300"></canvas>
+                        <div id="picker-cursor"></div>
+                    </div>
                     <div class="hex-disp" id="hex-val">#FFFFFF</div>
                 </div>
             </div>
@@ -193,18 +220,25 @@
     <div id="entry-layer">
         <div class="title-group">
             <div class="main-title">Solar Corona</div>
-            <div class="sub-title">Sun Zhonghang · Complete</div>
+            <div class="sub-title">Sun Zhonghang · Final Oath</div>
+            <div class="hint-text" id="sys-hint">SYSTEM MODE: PLEASE CHECK "SHARE AUDIO"</div>
         </div>
         
-        <div class="halo-container" onclick="startSequence()">
-            <div class="ring-outer"></div>
-            <div class="ring-mid"></div>
-            <div class="ring-inner"></div>
-            <div class="halo-text">ENTER</div>
+        <div class="btn-group">
+            <div class="halo-btn" onclick="startSequence('sys')">
+                <div class="btn-ring"></div>
+                <div class="btn-icon">🖥️</div>
+                <div class="btn-label">SYSTEM</div>
+            </div>
+            <div class="halo-btn" onclick="startSequence('mic')">
+                <div class="btn-ring"></div>
+                <div class="btn-icon">🎤</div>
+                <div class="btn-label">MIC / MIX</div>
+            </div>
         </div>
     </div>
 
-    <div id="mode-selector" class="glass-panel">
+    <div id="mode-selector">
         <button class="mode-btn active" onclick="setMode('TIDES')">TIDES</button>
         <button class="mode-btn" onclick="setMode('HORIZON')">HORIZON</button>
         <button class="mode-btn" onclick="setMode('RIPPLE')">RIPPLE</button>
@@ -214,45 +248,47 @@
     <div id="signature">SUN ZHONGHANG</div>
 
     <script>
-        // --- 0. 配置 ---
         const CONFIG = {
             gridX: 240, gridZ: 120, spacing: 1.3,
             colorDeep: new THREE.Color("#000000"), 
             colorPeak: new THREE.Color("#ffffff")
         };
 
-        // --- 1. 状态 ---
         let audioCtx, analyser, dataArray;
         let wallpaperAudioData = null; 
         let isSimulating = false, isRunning = false, isPaused = false;
         let time = 0;
         let currentMode = 'TIDES'; 
+        
         let volumeHistory = []; 
         let autoGain = 1.0;
+        let sBass = 0, sMid = 0, sHigh = 0;
+
         const currentY = new Float32Array(CONFIG.gridX * CONFIG.gridZ); 
         let mouseX = 0, mouseY = 0;
         let curMouseX = 0, curMouseY = 0;
 
-        // --- 修复版 HUD Picker 逻辑 ---
-        const pickerCanvas = document.getElementById('color-wheel');
+        // --- HUD Picker Logic (Final Fixed) ---
+        const pickerCanvas = document.getElementById('color-canvas');
         const pCtx = pickerCanvas.getContext('2d');
+        const pContainer = document.getElementById('color-wheel-container');
+        const pCursor = document.getElementById('picker-cursor');
         const pickerPanel = document.getElementById('hud-color-picker');
         let isPickerOpen = false;
 
         function drawColorWheel() {
-            // 确保 Canvas 内部分辨率匹配 CSS 尺寸 (Retina 2x)
-            const size = 300; 
-            const radius = size / 2;
-            const image = pCtx.createImageData(size, size);
+            const size = 160; const scale = 2;
+            pickerCanvas.style.width = size + 'px'; pickerCanvas.style.height = size + 'px';
+            const radius = size * scale / 2;
+            const image = pCtx.createImageData(2 * radius, 2 * radius);
             const data = image.data;
-
             for (let x = -radius; x < radius; x++) {
                 for (let y = -radius; y < radius; y++) {
                     const [r, phi] = xy2polar(x, y);
                     if (r > radius) continue;
                     const deg = (phi * 180) / Math.PI + 180; 
                     const color = new THREE.Color().setHSL(deg / 360, 1.0, 0.6);
-                    const index = ((x + radius) + (y + radius) * size) * 4;
+                    const index = ((x + radius) + (y + radius) * (2 * radius)) * 4;
                     data[index] = color.r * 255; data[index+1] = color.g * 255; data[index+2] = color.b * 255; data[index+3] = 255;
                 }
             }
@@ -261,37 +297,36 @@
         function xy2polar(x, y) { return [Math.sqrt(x*x + y*y), Math.atan2(y, x)]; }
         drawColorWheel();
 
-        function pickColor(e) {
-            const rect = pickerCanvas.getBoundingClientRect();
-            // 【修复】精确的坐标映射
-            const scaleX = pickerCanvas.width / rect.width;
-            const scaleY = pickerCanvas.height / rect.height;
-            
-            const x = (e.clientX - rect.left) * scaleX;
-            const y = (e.clientY - rect.top) * scaleY;
-            
-            const pixel = pCtx.getImageData(x, y, 1, 1).data;
-            if(pixel[3] === 0) return; // 透明区域
-
-            const hex = new THREE.Color(pixel[0]/255, pixel[1]/255, pixel[2]/255);
-            updateSystemColor(hex);
+        function handleColorPick(e) {
+            const rect = pContainer.getBoundingClientRect();
+            const w = rect.width; const h = rect.height;
+            const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+            const nx = (x / w) * 2 - 1; const ny = (y / h) * 2 - 1;
+            const dist = Math.sqrt(nx*nx + ny*ny);
+            let finalX = nx, finalY = ny;
+            if (dist > 1) { finalX = nx / dist; finalY = ny / dist; }
+            pCursor.style.left = `${(finalX + 1) * 50}%`;
+            pCursor.style.top = `${(finalY + 1) * 50}%`;
+            const angle = Math.atan2(finalY, finalX) + Math.PI;
+            const hue = angle / (Math.PI * 2);
+            const sat = Math.min(1, Math.sqrt(finalX*finalX + finalY*finalY));
+            const color = new THREE.Color().setHSL(hue, 1.0, 0.5 + (1-sat)*0.5);
+            updateSystemColor(color);
         }
 
         let isDraggingColor = false;
-        pickerCanvas.addEventListener('mousedown', () => isDraggingColor = true);
-        document.addEventListener('mouseup', () => isDraggingColor = false);
-        pickerCanvas.addEventListener('mousemove', (e) => { if(isDraggingColor) pickColor(e); });
-        pickerCanvas.addEventListener('click', pickColor);
+        pContainer.addEventListener('mousedown', (e) => { isDraggingColor = true; handleColorPick(e); });
+        window.addEventListener('mouseup', () => isDraggingColor = false);
+        window.addEventListener('mousemove', (e) => { if(isDraggingColor) handleColorPick(e); });
+        pContainer.addEventListener('click', handleColorPick);
 
         function togglePicker() {
             isPickerOpen = !isPickerOpen;
             if(isPickerOpen) pickerPanel.classList.add('active');
             else pickerPanel.classList.remove('active');
         }
-        // 点击外部关闭
         document.addEventListener('click', (e) => {
-            if (!document.getElementById('btn-color').contains(e.target) && 
-                !pickerPanel.contains(e.target)) {
+            if (!document.getElementById('btn-color').contains(e.target) && !pickerPanel.contains(e.target)) {
                 isPickerOpen = false; pickerPanel.classList.remove('active');
             }
         });
@@ -305,7 +340,7 @@
             
             CONFIG.colorPeak.copy(color);
             const hsl = {}; color.getHSL(hsl);
-            CONFIG.colorDeep.setHSL(hsl.h, hsl.s * 0.8, 0.02);
+            CONFIG.colorDeep.setHSL(hsl.h, hsl.s * 0.6, 0.02);
         }
 
         // --- 交互 ---
@@ -342,6 +377,7 @@
             else if (document.exitFullscreen) document.exitFullscreen();
         };
 
+        // Wallpaper Engine Support
         window.wallpaperPropertyListener = { applyUserProperties: function(properties) {} };
         window.wallpaperRegisterAudioListener && window.wallpaperRegisterAudioListener((audioArray) => {
             wallpaperAudioData = audioArray;
@@ -350,32 +386,43 @@
 
         function autoStartWallpaperMode() {
             const layer = document.getElementById('entry-layer');
-            if(layer.style.display !== 'none') {
-                layer.style.display = 'none'; 
-                document.getElementById('signature').classList.add('visible');
-                document.getElementById('mode-selector').classList.add('visible');
-                document.getElementById('top-bar').classList.add('visible');
-                document.getElementById('btn-fullscreen').style.display = 'none'; 
-                isRunning = true;
-                resetIdleTimer();
-                animate(); 
-            }
+            layer.style.display = 'none';
+            document.getElementById('signature').classList.add('visible');
+            document.getElementById('mode-selector').classList.add('visible');
+            document.getElementById('top-bar').classList.add('visible');
+            document.getElementById('btn-fullscreen').style.display = 'none';
+            isRunning = true;
+            animate();
         }
 
-        async function startSequence() {
-            const btn = document.querySelector('.halo-container');
-            btn.style.transform = 'scale(0.9)'; btn.style.opacity = '0'; btn.style.pointerEvents = 'none';
+        async function startSequence(type) {
+            const btns = document.querySelectorAll('.halo-btn');
+            btns.forEach(b => { b.style.transform = 'scale(0.9)'; b.style.opacity = '0'; b.style.pointerEvents = 'none'; });
+            
+            if(type === 'sys') document.getElementById('sys-hint').style.opacity = 1;
+
             try {
                 window.AudioContext = window.AudioContext || window.webkitAudioContext;
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                let stream;
+                if (type === 'sys') {
+                    stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: { echoCancellation: false } });
+                    stream.getVideoTracks().forEach(t => t.stop());
+                    if(stream.getAudioTracks().length === 0) throw new Error("No audio");
+                } else {
+                    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                }
+
                 audioCtx = new AudioContext();
                 const src = audioCtx.createMediaStreamSource(stream);
                 analyser = audioCtx.createAnalyser();
                 analyser.fftSize = 2048; 
-                analyser.smoothingTimeConstant = 0.75; 
+                analyser.smoothingTimeConstant = 0.82; // 最终稳定系数
                 src.connect(analyser);
                 dataArray = new Uint8Array(analyser.frequencyBinCount);
-            } catch (e) { isSimulating = true; }
+            } catch (e) { 
+                console.log("Audio failed, SIM mode");
+                isSimulating = true; 
+            }
 
             const layer = document.getElementById('entry-layer');
             layer.style.opacity = 0;
@@ -435,20 +482,19 @@
         geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
         geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
-        // 材质：烟雾柔光
         const canvas = document.createElement('canvas'); canvas.width=128; canvas.height=128;
         const ctx = canvas.getContext('2d');
         const g = ctx.createRadialGradient(64,64,0,64,64,64);
         g.addColorStop(0, 'rgba(255,255,255,1)');
-        g.addColorStop(0.2, 'rgba(255,255,255,0.4)'); 
-        g.addColorStop(0.6, 'rgba(255,255,255,0.05)');
+        g.addColorStop(0.3, 'rgba(255,255,255,0.8)');
+        g.addColorStop(0.5, 'rgba(255,255,255,0.15)');
         g.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle=g; ctx.fillRect(0,0,128,128);
         const tex = new THREE.Texture(canvas); tex.needsUpdate=true;
 
         const material = new THREE.PointsMaterial({
-            size: 3.5, map: tex, vertexColors: true, 
-            blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.65
+            size: 1.3, map: tex, vertexColors: true, 
+            blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 1.0
         });
         const mesh = new THREE.Points(geometry, material);
         scene.add(mesh);
@@ -458,7 +504,6 @@
             if(isPaused) return;
             time += 0.008;
 
-            // 动态更新拖尾背景色
             fadeMaterial.color.copy(CONFIG.colorDeep);
             renderer.render(fadeScene, camera);
 
@@ -470,7 +515,7 @@
                 for(let k=0; k<4; k++) bSum += wallpaperAudioData[k];
                 for(let k=10; k<25; k++) mSum += wallpaperAudioData[k];
                 for(let k=40; k<64; k++) hSum += wallpaperAudioData[k];
-                bass = (bSum/4); mid = (mSum/15); high = (hSum/24);
+                bass = (bSum/4)*2.0; mid = (mSum/15)*1.5; high = (hSum/24)*2.5;
                 currentVolume = bass + mid + high;
             } else if (isRunning && !isSimulating && analyser) {
                 analyser.getByteFrequencyData(dataArray);
@@ -483,7 +528,6 @@
                 currentVolume = 0.5;
             }
 
-            // Auto-Gain
             if (!isSimulating && isRunning) {
                 volumeHistory.push(currentVolume);
                 if (volumeHistory.length > 60) volumeHistory.shift();
@@ -494,6 +538,13 @@
             } else { autoGain = 1.0; }
 
             bass *= autoGain * 1.5; mid *= autoGain * 1.3; high *= autoGain * 1.8;
+
+            // [核心] 音频惯性平滑
+            if (bass > sBass) sBass = bass; else sBass += (bass - sBass) * 0.12;
+            if (mid > sMid) sMid = mid; else sMid += (mid - sMid) * 0.1;
+            if (high > sHigh) sHigh = high; else sHigh += (high - sHigh) * 0.2;
+
+            let pBass = sBass; let pMid = sMid; let pHigh = sHigh;
 
             const pos = geometry.attributes.position.array;
             const col = geometry.attributes.color.array;
@@ -515,43 +566,43 @@
                     const wave = Math.sin(bx * 0.05 + time) * Math.cos(bz * 0.05 + time * 0.5) * 3;
                     const xNorm = (bx + offsetX) / (CONFIG.gridX * CONFIG.spacing);
                     const bassFactor = Math.max(0, 1 - xNorm * 1.5);
-                    const highFactor = Math.max(0, (xNorm - 0.3) * 1.5);
-                    const audioForce = (bass * bassFactor * 35) + (high * highFactor * 30);
+                    const midFactor = Math.max(0, (xNorm - 0.3) * 1.5);
+                    const audioForce = (pBass * bassFactor * 35) + (pMid * midFactor * 25);
                     targetY = wave + Math.sin(bz * 0.2 - time * 3) * audioForce;
-                    pos[ix+1] += (targetY - pos[ix+1]) * 0.2; 
+                    pos[ix+1] += (targetY - pos[ix+1]) * 0.25; 
                     pos[ix] += (targetX - pos[ix]) * 0.1; pos[ix+2] += (targetZ - pos[ix+2]) * 0.1;
 
                 } else if (currentMode === 'HORIZON') {
                     targetCamY = 8;
                     const distX = Math.abs(bx);
-                    const tunnel = Math.pow(distX / 30, 2.5) * 1.5; 
-                    const sway = Math.sin(bx * 0.05 + time * 3); 
-                    targetY = tunnel + sway * (bass * 25 + mid * 20);
-                    pos[ix+1] += (targetY - pos[ix+1]) * 0.2;
+                    const tunnel = Math.pow(distX / 30, 2.5) * (1.5 + pBass * 0.5); 
+                    const flow = Math.sin(bz * 0.1 + time * 8); 
+                    targetY = tunnel + flow * (pMid * 20);
+                    pos[ix+1] += (targetY - pos[ix+1]) * 0.25;
                     pos[ix] += (targetX - pos[ix]) * 0.1; pos[ix+2] += (targetZ - pos[ix+2]) * 0.1;
 
                 } else if (currentMode === 'RIPPLE') {
                     targetCamY = 40; targetCamZOffset = 20;
                     const dist = Math.sqrt(bx*bx + bz*bz);
-                    const ripple = Math.sin(dist * 0.15 - time * 3);
-                    const decay = Math.max(0, 1 - dist / 70);
-                    targetY = ripple * decay * (3 + bass * 35 + mid * 15);
-                    pos[ix+1] += (targetY - pos[ix+1]) * 0.2;
+                    const ripple = Math.sin(dist * 0.12 - time * 3);
+                    const decay = Math.max(0, 1 - dist / 120);
+                    targetY = ripple * decay * (3 + pBass * 30 + pMid * 15);
+                    pos[ix+1] += (targetY - pos[ix+1]) * 0.3;
                     pos[ix] += (targetX - pos[ix]) * 0.1; pos[ix+2] += (targetZ - pos[ix+2]) * 0.1;
 
                 } else if (currentMode === 'WARP') {
                     targetCamY = 0; 
-                    const angle = (bx / offsetX) * Math.PI; const radius = 35 + bass * 25; 
+                    const angle = (bx / offsetX) * Math.PI; const radius = 30 + pBass * 25; 
                     const flowZ = (bz + time * 120) % 100 - 50; 
                     targetX = Math.cos(angle) * radius; targetY = Math.sin(angle) * radius; targetZ = flowZ; 
-                    if (high > 0.1) {
-                        const spike = Math.random() * high * 6;
+                    if (pHigh > 0.1) {
+                        const spike = Math.random() * pHigh * 6;
                         targetX += Math.cos(angle) * spike; targetY += Math.sin(angle) * spike;
                     }
                     pos[ix] += (targetX - pos[ix]) * 0.15;
                     pos[ix+1] += (targetY - pos[ix+1]) * 0.15;
                     if (Math.abs(pos[ix+2] - targetZ) > 50) pos[ix+2] = targetZ;
-                    else pos[ix+2] += (targetZ - pos[ix+2]) * 0.2;
+                    else pos[ix+2] += (targetZ - pos[ix+2]) * 0.3;
                 }
 
                 let intensity = 0;
@@ -565,14 +616,13 @@
                 tempColor.copy(CONFIG.colorDeep);
                 tempColor.lerp(CONFIG.colorPeak, intensity);
 
-                if(intensity > 0.6) tempColor.offsetHSL(0.55, 0, 0.1); 
-
-                if(high > 0.2 && intensity > 0.4) {
-                    tempColor.r += high; tempColor.g += high; tempColor.b += high;
+                // [修复] 颜色纯净，仅增亮，不偏色
+                if(pHigh > 0.2 && intensity > 0.4) {
+                    tempColor.r += pHigh * 0.5; tempColor.g += pHigh * 0.5; tempColor.b += pHigh * 0.5;
                 }
 
                 col[ix] = tempColor.r; col[ix+1] = tempColor.g; col[ix+2] = tempColor.b;
-                siz[i] = 2.0 + intensity * 15.0; 
+                siz[i] = 0.8 + intensity * 4.0;
             }
 
             geometry.attributes.position.needsUpdate = true;
